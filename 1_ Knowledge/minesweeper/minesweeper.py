@@ -253,11 +253,14 @@ class MinesweeperAI():
                         continue
                     if sent1.issubset(sent2):
                         new_sent = sent2-sent1
-                        new_safes.update(
-                            safe for safe in new_sent.known_safes() if safe not in self.safes)
-                        new_mines.update(
-                            mine for mine in new_sent.known_mines() if mine not in self.safes)
-            loop: bool = new_safes or new_mines
+                    else:
+                        continue
+                    new_safes.update(
+                        safe for safe in new_sent.known_safes() if safe not in self.safes)
+                    new_mines.update(
+                        mine for mine in new_sent.known_mines() if mine not in self.safes)
+
+            loop: bool = loop or new_safes or new_mines
             for cell in new_safes:
                 self.mark_safe(cell)
             for cell in new_mines:
