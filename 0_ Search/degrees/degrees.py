@@ -98,12 +98,7 @@ def shortest_path(source, target):
     explored = set()
     if start.state == target:
         # print("Found")
-        path = []
-        while start.parent:
-            path.append((start.action, start.state))
-            start = start.parent
-        path.reverse()
-        return path
+        return []
     while True:
         if frontier.empty():
             return None

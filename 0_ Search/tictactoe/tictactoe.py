@@ -98,35 +98,33 @@ def utility(board):
         return 0
 
 
-def min_(iterable, key=None):
+def min_(iterable, key=NotImplementedError):
     m_nu = 2
     for num in iterable:
-        if key:
-            num = key(num)
         if num == -1:
             return -1
         m_nu = min(m_nu, num)
     return m_nu
 
 
-def max_(iterable, key=None):
+def max_(iterable, key=NotImplementedError):
     m_nu = -2
     for num in iterable:
-        if key:
-            num = key(num)
         if num == 1:
             return 1
         m_nu = max(m_nu, num)
     return m_nu
 
 
-def best_val(board):
+def best_val(board, cur_player=None):
     if terminal(board):
         return utility(board)
-    if player(board) is X:
-        return max_((best_val(result(board, action)) for action in actions(board)))
+    if not cur_player:
+        cur_player = player(board)
+    if cur_player is X:
+        return max_((best_val(result(board, action), X if cur_player == O else O) for action in actions(board)))
     else:
-        return min_([best_val(result(board, action)) for action in actions(board)])
+        return min_((best_val(result(board, action), X if cur_player == O else O) for action in actions(board)))
 
 
 def minimax(board):
@@ -137,17 +135,19 @@ def minimax(board):
         return None
     acts = list(actions(board))
     values = []
+    cur_player = player(board)
     for action in acts:
-        if player(board) == X:
-            if (val := best_val(result(board, action))) == 1:
+        val = best_val(result(board, action))
+        if cur_player == X:
+            if val == 1:
                 return action
             values.append(val)
 
         else:
-            if (val := best_val(result(board, action))) == -1:
+            if val == -1:
                 return action
             values.append(val)
-    if player(board) == X:
+    if cur_player == X:
         return acts[values.index(max(values))]
     else:
         return acts[values.index(min(values))]
