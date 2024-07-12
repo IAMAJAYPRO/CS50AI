@@ -108,6 +108,9 @@ class Sentence():
         new_ct = self.count-other.count
         return Sentence(new_cells, new_ct)
 
+    def isempty(self):
+        return len(self.cells) == 0
+
     def issubset(self, other):
         return self.cells.issubset(other.cells)
 
@@ -208,13 +211,10 @@ class MinesweeperAI():
         for i in range(-1, 2):
             for j in range(-1, 2):
                 h, k = cell[0]+i, cell[1]+j
-                if not (0 <= h < self.height and 0 <= k < self.width):
+                if not (0 <= h < self.height and 0 <= k < self.width) or (h, k) in self.safes:
                     continue
-
                 if (h, k) in self.mines:
                     count -= 1
-                    continue
-                elif (h, k) in self.safes:
                     continue
                 elif (h, k) != cell:
                     neighbours.add((h, k))
@@ -235,7 +235,7 @@ class MinesweeperAI():
                     safe for safe in sent.known_safes() if safe not in self.safes)
                 new_mines.update(
                     mine for mine in sent.known_mines() if mine not in self.mines)
-            loop: bool = new_safes or new_mines
+            loop = new_safes or new_mines
             """
             print(new_mines,len(new_mines))
             print(new_safes,len(new_safes))
@@ -245,6 +245,8 @@ class MinesweeperAI():
             for cell in new_mines:
                 self.mark_mine(cell)
 
+            # new_know = []
+
             new_safes = set()
             new_mines = set()
             for sent1 in self.knowledge:
@@ -253,6 +255,9 @@ class MinesweeperAI():
                         continue
                     if sent1.issubset(sent2):
                         new_sent = sent2-sent1
+                        if new_sent.isempty():
+                            continue
+                        # else new_know.append(new_sent)
                     else:
                         continue
                     new_safes.update(
@@ -260,11 +265,16 @@ class MinesweeperAI():
                     new_mines.update(
                         mine for mine in new_sent.known_mines() if mine not in self.safes)
 
-            loop: bool = loop or new_safes or new_mines
+            loop = loop or new_safes or new_mines  # or new_know
             for cell in new_safes:
                 self.mark_safe(cell)
             for cell in new_mines:
                 self.mark_mine(cell)
+            # self.knowledge.extend(new_know)
+
+            # drop empty knowledge
+            self.knowledge = [
+                sent for sent in self.knowledge if not sent.isempty()]
 
     def make_safe_move(self):
         """

@@ -19,8 +19,8 @@ def command_prompt():
     parser.add_argument("--mines", type=int, default=8,
                         metavar="N_mines", help="number of mines, default 8")
     exp_gp = parser.add_mutually_exclusive_group()
-    exp_gp.add_argument('-e', "--expand", action='store_true', default=True,
-                        help='Expand the 0 neighbours chain')
+    exp_gp.add_argument("--expand", action='store_true', default=True,
+                        help='Expand the 0 neighbours chain (default)')
     exp_gp.add_argument('-E', action='store_false', dest='expand',
                         help='Do not expand the 0 neighbours chain')
     args = parser.parse_args()
