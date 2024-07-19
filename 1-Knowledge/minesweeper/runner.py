@@ -9,8 +9,8 @@ def command_prompt():
     parser = ArgumentParser(description="Cs50 Minesweeper game and AI")
     parser.add_argument("-d", "--debug", action="store_true",
                         help="shows color for what ai thinks is safe/mine. RED=Mine, Green=Safe.")
-    parser.epilog = """Argparse and Debugger by @IAMAJAYPRO.
-    @IAMAJAYPRO also added color differences(the game looks better)"""
+    parser.epilog = """Debugger by @IAMAJAYPRO.
+    Also added color differences(the game looks better)(UI)"""
     dims_gp = parser.add_mutually_exclusive_group()
     dims_gp.add_argument("--dim", '--dimensions', nargs=2, type=int,
                          metavar=('HEIGHT', 'WIDTH'), help="Specify height and width.")
@@ -35,11 +35,11 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)  # unused
 
-
 HEIGHT = args.dim[0] if args.dim else args.square
 WIDTH = args.dim[1] if args.dim else args.square
 MINES = args.mines
 
+# Colors
 BLACK = (0, 0, 0)
 GRAY = (180, 180, 180)
 WHITE = (255, 255, 255)
@@ -49,7 +49,6 @@ REVD_COLOR1 = (240,)*3
 if MINES > HEIGHT*WIDTH:
     quit(f"    Error: No. of mines should be more than no. of available spaces({
          HEIGHT*WIDTH}).")
-# Colors
 
 # Create game
 pygame.init()
