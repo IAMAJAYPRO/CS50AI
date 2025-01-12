@@ -3,3 +3,5 @@ __pycache__/
 
 # Exclude pytest cache directories
 .pytest_cache/
+
+/CS50AI-Lecture/
